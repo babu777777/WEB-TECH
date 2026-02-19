@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Store Manager</title>
+</head>
+<body>
+
+<h2>Store Manager</h2>
+
+<input id="code" placeholder="Product Code">
+<input id="name" placeholder="Item Name">
+<input id="type" placeholder="Category">
+<input id="price" placeholder="Unit Price">
+<input id="qty" placeholder="Quantity">
+<button onclick="addItem()">Add</button>
+
+<h3>Total Stock Value: <span id="totalVal">0</span></h3>
+
+<table border="1">
+<thead>
+<tr>
+<th>Code</th><th>Name</th><th>Type</th><th>Price</th><th>Qty</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="storeBody"></tbody>
+</table>
+
+<script>
+let items=[];
+
+async function loadStore(){
+    const res=await fetch("store.json");
+    const data=await res.json();
+    items=data.items;
+    renderStore();
+}
+
+function renderStore(){
+    const body=document.getElementById("storeBody");
+    body.innerHTML="";
+    let total=0;
+
+    items.forEach(i=>{
+        total+=i.unitPrice*i.quantity;
+        body.innerHTML+=`
+        <tr>
+        <td>${i.productCode}</td>
+        <td>${i.itemName}</td>
+        <td>${i.type}</td>
+        <td>${i.unitPrice}</td>
+        <td>${i.quantity}</td>
+        <td><button onclick="deleteItem(${i.productCode})">Delete</button></td>
+        </tr>`;
+    });
+
+    totalVal.innerText=total;
+}
+
+function addItem(){
+    items.push({
+        productCode:parseInt(code.value),
+        itemName:name.value,
+        type:type.value,
+        unitPrice:parseFloat(price.value),
+        quantity:parseInt(qty.value)
+    });
+    renderStore();
+}
+
+function deleteItem(id){
+    items=items.filter(i=>i.productCode!==id);
+    renderStore();
+}
+
+window.onload=loadStore;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Academic Register</title>
+</head>
+<body>
+
+<h2>Academic Register</h2>
+
+<input id="roll" placeholder="Roll No">
+<input id="name" placeholder="Student Name">
+<input id="branch" placeholder="Branch">
+<input id="grade" placeholder="Grade">
+<button onclick="addStudent()">Add</button>
+
+<table border="1">
+<thead>
+<tr>
+<th>Roll</th><th>Name</th><th>Branch</th><th>Grade</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="regBody"></tbody>
+</table>
+
+<script>
+let students=[];
+
+async function loadRegister(){
+    const res=await fetch("register.json");
+    const data=await res.json();
+    students=data.data;
+    showStudents();
+}
+
+function showStudents(){
+    const body=document.getElementById("regBody");
+    body.innerHTML="";
+    students.forEach(s=>{
+        body.innerHTML+=`
+        <tr>
+        <td>${s.rollNo}</td>
+        <td>${s.studentName}</td>
+        <td>${s.branch}</td>
+        <td>${s.grade}</td>
+        <td><button onclick="removeStudent(${s.rollNo})">Delete</button></td>
+        </tr>`;
+    });
+}
+
+function addStudent(){
+    students.push({
+        rollNo:parseInt(roll.value),
+        studentName:name.value,
+        branch:branch.value,
+        grade:parseInt(grade.value)
+    });
+    showStudents();
+}
+
+function removeStudent(id){
+    students=students.filter(s=>s.rollNo!==id);
+    showStudents();
+}
+
+window.onload=loadRegister;
+</script>
+
+</body>
+</html>

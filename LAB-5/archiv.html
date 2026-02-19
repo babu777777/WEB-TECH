@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Book Archive</title>
+</head>
+<body>
+
+<h2>Book Archive System</h2>
+
+<input id="bcode" placeholder="Code">
+<input id="bname" placeholder="Book Name">
+<input id="bauthor" placeholder="Author">
+<button onclick="addRecord()">Add Book</button>
+
+<table border="1">
+<thead>
+<tr>
+<th>Code</th><th>Name</th><th>Author</th><th>Status</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="archiveBody"></tbody>
+</table>
+
+<script>
+let archiveXML;
+
+async function loadArchive(){
+    const res = await fetch("archive.xml");
+    const text = await res.text();
+    archiveXML = new DOMParser().parseFromString(text,"text/xml");
+    displayArchive();
+}
+
+function displayArchive(){
+    const body = document.getElementById("archiveBody");
+    body.innerHTML="";
+    const list = archiveXML.getElementsByTagName("record");
+
+    for(let r of list){
+        body.innerHTML += `
+        <tr>
+        <td>${r.getElementsByTagName("code")[0].textContent}</td>
+        <td>${r.getElementsByTagName("name")[0].textContent}</td>
+        <td>${r.getElementsByTagName("creator")[0].textContent}</td>
+        <td>${r.getElementsByTagName("availability")[0].textContent}</td>
+        <td>
+        <button onclick="toggleStatus('${r.getElementsByTagName("code")[0].textContent}')">Toggle</button>
+        <button onclick="deleteRecord('${r.getElementsByTagName("code")[0].textContent}')">Delete</button>
+        </td>
+        </tr>`;
+    }
+}
+
+function addRecord(){
+    const root = archiveXML.documentElement;
+    const record = archiveXML.createElement("record");
+
+    ["code","name","creator","availability"].forEach((tag,i)=>{
+        let node = archiveXML.createElement(tag);
+        let values = [bcode.value,bname.value,bauthor.value,"InStock"];
+        node.textContent = values[i];
+        record.appendChild(node);
+    });
+
+    root.appendChild(record);
+    displayArchive();
+}
+
+function toggleStatus(id){
+    const list = archiveXML.getElementsByTagName("record");
+    for(let r of list){
+        if(r.getElementsByTagName("code")[0].textContent===id){
+            let status = r.getElementsByTagName("availability")[0];
+            status.textContent = status.textContent==="InStock"?"OutOfStock":"InStock";
+        }
+    }
+    displayArchive();
+}
+
+function deleteRecord(id){
+    const list = archiveXML.getElementsByTagName("record");
+    for(let r of list){
+        if(r.getElementsByTagName("code")[0].textContent===id){
+            archiveXML.documentElement.removeChild(r);
+            break;
+        }
+    }
+    displayArchive();
+}
+
+window.onload=loadArchive;
+</script>
+
+</body>
+</html>

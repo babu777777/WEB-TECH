@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Staff Data System</title>
+</head>
+<body>
+
+<h2>Staff Data</h2>
+
+<input id="sid" placeholder="Staff ID">
+<input id="sname" placeholder="Name">
+<input id="sunit" placeholder="Unit">
+<input id="swage" placeholder="Wage">
+<button onclick="insertStaff()">Add</button>
+
+<table border="1">
+<thead>
+<tr>
+<th>ID</th><th>Name</th><th>Unit</th><th>Wage</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="staffBody"></tbody>
+</table>
+
+<script>
+let staffXML;
+
+async function loadStaff(){
+    const res = await fetch("staff.xml");
+    const txt = await res.text();
+    staffXML = new DOMParser().parseFromString(txt,"text/xml");
+    renderStaff();
+}
+
+function renderStaff(){
+    const body = document.getElementById("staffBody");
+    body.innerHTML="";
+    const list = staffXML.getElementsByTagName("staff");
+
+    for(let s of list){
+        body.innerHTML += `
+        <tr>
+        <td>${s.getElementsByTagName("staffId")[0].textContent}</td>
+        <td>${s.getElementsByTagName("staffName")[0].textContent}</td>
+        <td>${s.getElementsByTagName("unit")[0].textContent}</td>
+        <td>${s.getElementsByTagName("wage")[0].textContent}</td>
+        <td><button onclick="removeStaff('${s.getElementsByTagName("staffId")[0].textContent}')">Delete</button></td>
+        </tr>`;
+    }
+}
+
+function insertStaff(){
+    const root = staffXML.documentElement;
+    const node = staffXML.createElement("staff");
+
+    ["staffId","staffName","unit","wage"].forEach((tag,i)=>{
+        let child = staffXML.createElement(tag);
+        let vals = [sid.value,sname.value,sunit.value,swage.value];
+        child.textContent = vals[i];
+        node.appendChild(child);
+    });
+
+    root.appendChild(node);
+    renderStaff();
+}
+
+function removeStaff(id){
+    const list = staffXML.getElementsByTagName("staff");
+    for(let s of list){
+        if(s.getElementsByTagName("staffId")[0].textContent === id){
+            staffXML.documentElement.removeChild(s);
+            break;
+        }
+    }
+    renderStaff();
+}
+
+window.onload = loadStaff;
+</script>
+
+</body>
+</html>

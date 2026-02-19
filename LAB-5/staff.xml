@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<staffList>
+    <staff>
+        <staffId>201</staffId>
+        <staffName>Anil</staffName>
+        <unit>Sales</unit>
+        <wage>40000</wage>
+    </staff>
+</staffList>
