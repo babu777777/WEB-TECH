@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management System</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input { margin: 5px; padding: 5px; }
+        button { padding: 5px 10px; margin: 5px; }
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; }
+        .message { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h2>Student Management System (AJAX CRUD)</h2>
+
+<!-- Form -->
+<input type="text" id="id" placeholder="Student ID">
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="dept" placeholder="Department">
+<input type="number" id="marks" placeholder="Marks">
+
+<button onclick="addStudent()">Add</button>
+<button onclick="updateStudent()">Update</button>
+
+<div class="message" id="message"></div>
+
+<!-- Table -->
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Marks</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+</table>
+
+<script>
+const API_URL = "http://localhost:3000/students";
+
+function showMessage(msg, isError = false) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.innerText = msg;
+    messageDiv.style.color = isError ? "red" : "green";
+}
+
+// READ
+function fetchStudents() {
+    fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("studentTable");
+            table.innerHTML = "";
+
+            data.forEach(student => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.department}</td>
+                        <td>${student.marks}</td>
+                        <td>
+                            <button onclick="editStudent('${student.id}','${student.name}','${student.department}','${student.marks}')">Edit</button>
+                            <button onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+}
+
+// CREATE
+function addStudent() {
+    const student = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        department: document.getElementById("dept").value,
+        marks: document.getElementById("marks").value
+    };
+
+    fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+    })
+    .then(res => {
+        if (res.status === 200) {
+            showMessage("Student Added Successfully");
+            fetchStudents();
+        } else {
+            showMessage("Error Adding Student", true);
+        }
+    });
+}
+
+// UPDATE
+function updateStudent() {
+    const id = document.getElementById("id").value;
+
+    const student = {
+        id: id,
+        name: document.getElementById("name").value,
+        department: document.getElementById("dept").value,
+        marks: document.getElementById("marks").value
+    };
+
+    fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+    })
+    .then(res => {
+        if (res.status === 200) {
+            showMessage("Student Updated Successfully");
+            fetchStudents();
+        } else if (res.status === 404) {
+            showMessage("Student Not Found", true);
+        } else {
+            showMessage("Server Error", true);
+        }
+    });
+}
+
+// DELETE
+function deleteStudent(id) {
+    fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    })
+    .then(res => {
+        if (res.status === 200) {
+            showMessage("Student Deleted Successfully");
+            fetchStudents();
+        } else if (res.status === 404) {
+            showMessage("Student Not Found", true);
+        } else {
+            showMessage("Server Error", true);
+        }
+    });
+}
+
+// Fill form for editing
+function editStudent(id, name, dept, marks) {
+    document.getElementById("id").value = id;
+    document.getElementById("name").value = name;
+    document.getElementById("dept").value = dept;
+    document.getElementById("marks").value = marks;
+}
+
+fetchStudents();
+</script>
+
+</body>
+</html>
