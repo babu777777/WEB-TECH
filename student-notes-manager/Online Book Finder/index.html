@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Book Finder</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+display:flex;
+min-height:100vh;
+background:#f4f6fb;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:260px;
+background:#1e293b;
+color:white;
+padding:25px;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+text-align:center;
+}
+
+.sidebar input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:6px;
+margin:8px 0;
+}
+
+.sidebar button{
+width:100%;
+padding:10px;
+border:none;
+margin:5px 0;
+border-radius:6px;
+cursor:pointer;
+background:#3b82f6;
+color:white;
+transition:0.3s;
+}
+
+.sidebar button:hover{
+background:#2563eb;
+}
+
+/* Main Area */
+
+.main{
+flex:1;
+padding:30px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.header h1{
+color:#1e293b;
+}
+
+.controls{
+margin-bottom:20px;
+}
+
+.controls button{
+padding:10px 15px;
+border:none;
+border-radius:6px;
+margin-right:10px;
+cursor:pointer;
+background:#10b981;
+color:white;
+transition:0.3s;
+}
+
+.controls button:hover{
+background:#059669;
+}
+
+/* Book Grid */
+
+#bookContainer{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.book-card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.book-card:hover{
+transform:translateY(-6px);
+}
+
+.book-card h3{
+margin-bottom:8px;
+}
+
+.book-card p{
+font-size:14px;
+margin:4px 0;
+}
+
+.price{
+color:#16a34a;
+font-weight:bold;
+}
+
+.rating{
+color:#f59e0b;
+font-weight:bold;
+}
+
+.pagination{
+margin-top:25px;
+}
+
+.pagination button{
+padding:10px 15px;
+border:none;
+background:#6366f1;
+color:white;
+border-radius:6px;
+margin-right:10px;
+cursor:pointer;
+}
+
+.pagination button:hover{
+background:#4f46e5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>📚 Book Finder</h2>
+
+<h4>Search Title</h4>
+<input type="text" id="searchTitle" placeholder="Enter title">
+<button onclick="searchBook()">Search</button>
+
+<h4>Category</h4>
+<input type="text" id="category" placeholder="Enter category">
+<button onclick="filterCategory()">Filter</button>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+<h1>Online Book Library</h1>
+</div>
+
+<div class="controls">
+<button onclick="sortBooks('price')"><i class="fa fa-sort"></i> Sort by Price</button>
+<button onclick="sortBooks('rating')"><i class="fa fa-star"></i> Sort by Rating</button>
+<button onclick="topBooks()"><i class="fa fa-crown"></i> Top Rated</button>
+</div>
+
+<div id="bookContainer"></div>
+
+<div class="pagination">
+<button onclick="loadPage(1)">Page 1</button>
+<button onclick="loadPage(2)">Page 2</button>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
