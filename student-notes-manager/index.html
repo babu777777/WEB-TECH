@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Notes Manager</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f9fafc;
+padding:40px;
+}
+
+/* Title */
+
+.title{
+text-align:center;
+margin-bottom:30px;
+font-size:32px;
+color:#333;
+}
+
+/* Form */
+
+.note-form{
+max-width:500px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.1);
+margin-bottom:40px;
+}
+
+.note-form h2{
+margin-bottom:15px;
+}
+
+input, textarea{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:1px solid #ddd;
+border-radius:6px;
+font-size:14px;
+}
+
+textarea{
+height:90px;
+resize:none;
+}
+
+button{
+background:#ff7a18;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+transition:0.3s;
+}
+
+button:hover{
+background:#ff5500;
+}
+
+/* Notes grid */
+
+.notes-section{
+max-width:1000px;
+margin:auto;
+}
+
+.notes-section h2{
+margin-bottom:20px;
+}
+
+#notesContainer{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+/* Sticky note card */
+
+.note{
+background:#fff9c4;
+padding:15px;
+border-radius:8px;
+box-shadow:3px 4px 10px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.note:nth-child(2n){
+background:#c8e6c9;
+}
+
+.note:nth-child(3n){
+background:#bbdefb;
+}
+
+.note:hover{
+transform:scale(1.05);
+}
+
+.note h3{
+margin-bottom:5px;
+}
+
+.note .subject{
+font-size:13px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.note p{
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 class="title">📓 Student Notes Manager</h1>
+
+<div class="note-form">
+
+<h2>Add Note</h2>
+
+<input type="text" id="title" placeholder="Note Title">
+
+<input type="text" id="subject" placeholder="Subject">
+
+<textarea id="description" placeholder="Write your notes here..."></textarea>
+
+<button onclick="addNote()">Add Note</button>
+
+</div>
+
+<div class="notes-section">
+
+<h2>All Notes</h2>
+
+<div id="notesContainer"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
