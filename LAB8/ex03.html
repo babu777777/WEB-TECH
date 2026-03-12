@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course Enrollment</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #1e293b;
+      --text-light: #64748b;
+      --border: rgba(226, 232, 240, 0.6);
+      --shadow: 0 8px 32px rgba(99, 102, 241, 0.12);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      color: var(--text);
+    }
+
+    .enroll-container {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.4rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 460px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .enroll-container:hover {
+      transform: translateY(-4px);
+    }
+
+    .header {
+      background: linear-gradient(to right, var(--primary), #7c3aed);
+      color: white;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .content {
+      padding: 2rem 1.8rem;
+    }
+
+    .course-info {
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      border: 1px solid rgba(99, 102, 241, 0.12);
+    }
+
+    .course-title {
+      margin: 0 0 0.9rem;
+      color: var(--primary-dark);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .instructor-name {
+      color: var(--text-light);
+      font-size: 1.05rem;
+      margin: 0.5rem 0;
+    }
+
+    .seats-display {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+
+    .seats-progress {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      margin: 0.8rem 0 0.4rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.5s ease;
+    }
+
+    .low-seats .progress-fill { background: var(--warning); }
+    .full .progress-fill { background: var(--danger); }
+
+    button {
+      width: 100%;
+      padding: 1.1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin: 0.8rem 0;
+    }
+
+    .btn-enroll {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-enroll:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .btn-enroll:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    .btn-reset {
+      background: #f1f5f9;
+      color: #ef4444;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-reset:hover {
+      background: #fee2e2;
+    }
+
+    #message {
+      margin-top: 1.6rem;
+      padding: 1.3rem;
+      border-radius: 1rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    #message.success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    #message.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="enroll-container">
+    <div class="header">Course Enrollment</div>
+
+    <div class="content">
+      <div class="course-info" id="courseInfo">
+        <div class="course-title" id="courseName">Web Technologies</div>
+        <div class="instructor-name">Instructor: S Gopi Krishna</div>
+        <div class="seats-display" id="seatsText">25 / 25 seats</div>
+        <div class="seats-progress">
+          <div class="progress-fill" id="progressBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <button class="btn-enroll" id="enrollBtn" onclick="enrollStudent()">Enroll Now</button>
+      <button class="btn-reset" onclick="resetCourse()">Reset Course</button>
+
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    class Course {
+      constructor(name = "Web Technologies", maxSeats = 25) {
+        this.name = name;
+        this.instructor = "S Gopi Krishna";
+        this.maxSeats = maxSeats;
+        this.enrolled = 0;
+      }
+
+      get remaining() {
+        return this.maxSeats - this.enrolled;
+      }
+
+      get progress() {
+        return (this.enrolled / this.maxSeats) * 100;
+      }
+
+      enroll() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (this.enrolled < this.maxSeats) {
+              this.enrolled++;
+              resolve("Enrollment Successful 🎉");
+            } else {
+              reject("Course Full – No seats left");
+            }
+          }, 800);
+        });
+      }
+    }
+
+    let course = new Course();
+
+    function updateDisplay() {
+      document.getElementById("courseName").textContent = course.name;
+      document.getElementById("seatsText").textContent = 
+        `${course.remaining} / ${course.maxSeats} seats`;
+
+      const progressBar = document.getElementById("progressBar");
+      progressBar.style.width = `${course.progress}%`;
+
+      const infoEl = document.getElementById("courseInfo");
+      const enrollBtn = document.getElementById("enrollBtn");
+
+      if (course.remaining <= 3 && course.remaining > 0) {
+        infoEl.classList.add("low-seats");
+        infoEl.classList.remove("full");
+      } else if (course.remaining <= 0) {
+        infoEl.classList.add("full");
+        infoEl.classList.remove("low-seats");
+        enrollBtn.disabled = true;
+        enrollBtn.textContent = "Course Full";
+      } else {
+        infoEl.classList.remove("low-seats", "full");
+        enrollBtn.disabled = false;
+        enrollBtn.textContent = "Enroll Now";
+      }
+    }
+
+    function showMessage(text, type = "success") {
+      const msg = document.getElementById("message");
+      msg.textContent = text;
+      msg.className = type;
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 4200);
+    }
+
+    async function enrollStudent() {
+      try {
+        const result = await course.enroll();
+        showMessage(result, "success");
+      } catch (err) {
+        showMessage(err, "error");
+      }
+      updateDisplay();
+    }
+
+    function resetCourse() {
+      course = new Course();
+      document.getElementById("message").style.display = "none";
+      updateDisplay();
+    }
+
+    // Initial render
+    updateDisplay();
+  </script>
+
+</body>
+</html>

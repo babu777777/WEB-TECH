@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Student Card </title>
+  <style>
+    body { font-family: 'Poppins', system-ui, sans-serif; background: linear-gradient(135deg, #a1c4fd, #c2e9fb); min-height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; padding: 1.5rem; }
+    .card { background: white; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); width: 100%; max-width: 460px; overflow: hidden; }
+    .top { background: linear-gradient(90deg, #8b5cf6, #ec4899); color: white; padding: 2rem 1.8rem; text-align: center; }
+    .top h1 { margin: 0; font-size: 1.9rem; }
+    .form { padding: 2rem 1.8rem; }
+    .group { margin-bottom: 1.6rem; }
+    label { color: #6b7280; font-weight: 600; display: block; margin-bottom: 0.6rem; }
+    input, select { width: 100%; padding: 0.95rem 1.2rem; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1.05rem; }
+    input:focus, select:focus { border-color: #8b5cf6; outline: none; box-shadow: 0 0 0 4px #8b5cf633; }
+    .btns { display: flex; gap: 1rem; margin-top: 2rem; }
+    button { flex: 1; padding: 1rem; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+    .btn-go { background: #8b5cf6; color: white; }
+    .btn-go:hover { background: #7c3aed; }
+    .btn-clear { background: #f43f5e; color: white; }
+    .btn-clear:hover { background: #e11d48; }
+    #display { margin: 0 1.8rem 2rem; padding: 1.6rem; background: #f3e8ff; border-radius: 16px; display: none; text-align: center; }
+    #display.show { display: block; }
+    .item { margin: 1rem 0; font-size: 1.2rem; }
+    .item strong { color: #6d28d9; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top">
+    <h1>My Student Card </h1>
+  </div>
+
+  <div class="form">
+    <div class="group">
+      <label>ID Number</label>
+      <input type="number" id="id" placeholder="e.g. 101">
+    </div>
+
+    <div class="group">
+      <label>Your Name </label>
+      <input type="text" id="name" placeholder="e.g. Priya">
+    </div>
+
+    <div class="group">
+      <label>Branch / Department</label>
+      <select id="department">
+        <option value="">Select branch</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>AI & DS</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <label>Marks (out of 100)</label>
+      <input type="number" id="marks" min="0" max="100" placeholder="e.g. 92">
+    </div>
+
+    <div class="btns">
+      <button class="btn-go" onclick="showMyCard()">Show My Card!</button>
+      <button class="btn-clear" onclick="startOver()">Start Over</button>
+    </div>
+
+    <div id="display">
+      <div class="item"><strong>ID:</strong> <span id="d-id"></span></div>
+      <div class="item"><strong>Name:</strong> <span id="d-name"></span></div>
+      <div class="item"><strong>Branch:</strong> <span id="d-dept"></span></div>
+      <div class="item"><strong>Marks:</strong> <span id="d-marks"></span></div>
+      <div class="item"><strong>Grade:</strong> <span id="d-grade" style="font-size:1.4rem"></span> 🎉</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function getGrade(m) {
+  if (m >= 90) return 'A ';
+  if (m >= 80) return 'B ';
+  if (m >= 70) return 'C ';
+  if (m >= 60) return 'D ';
+  return 'F ';
+}
+
+function showMyCard() {
+  const student = {
+    id: +document.getElementById('id').value || '?',
+    name: document.getElementById('name').value.trim() || 'Super Student',
+    department: document.getElementById('department').value || '—',
+    marks: +document.getElementById('marks').value || 0
+  };
+
+  const { id, name, department, marks } = student;
+  const card = { ...student, grade: getGrade(marks) };
+
+  document.getElementById('d-id').textContent    = id;
+  document.getElementById('d-name').textContent  = name;
+  document.getElementById('d-dept').textContent  = department;
+  document.getElementById('d-marks').textContent = marks;
+  document.getElementById('d-grade').textContent = card.grade;
+
+  document.getElementById('display').classList.add('show');
+}
+
+function startOver() {
+  document.getElementById('id').value = '';
+  document.getElementById('name').value = '';
+  document.getElementById('department').value = '';
+  document.getElementById('marks').value = '';
+  document.getElementById('display').classList.remove('show');
+}
+</script>
+
+</body>
+</html>
