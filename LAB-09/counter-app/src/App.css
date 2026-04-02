@@ -1,0 +1,89 @@
+.App {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f9;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.counter-container {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 50px 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.counter-display {
+  background-color: #f8f9fa;
+  border: 3px solid #3498db;
+  border-radius: 15px;
+  padding: 40px 20px;
+  margin: 30px 0;
+}
+
+.counter-display h2 {
+  font-size: 72px;
+  margin: 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.btn {
+  padding: 14px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+.increment {
+  background-color: #27ae60;
+  color: white;
+}
+
+.decrement {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.reset {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.info {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #555;
+}
